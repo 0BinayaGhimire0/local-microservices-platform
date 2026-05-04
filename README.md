@@ -279,5 +279,3 @@ This project demonstrates:
 # 👤 Author
 
 **Binaya Ghimire**
-GitHub: https://github.com/0BinayaGhimire0
-LinkedIn: https://linkedin.com/in/binaya-ghimire
