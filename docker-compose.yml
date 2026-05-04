@@ -20,6 +20,8 @@ services:
     build:
       context: ./services/worker
     container_name: local-platform-worker
+    ports:
+      - "8000:8000"
     environment:
       REDIS_HOST: redis
     depends_on:
