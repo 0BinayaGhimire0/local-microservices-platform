@@ -43,3 +43,17 @@ This project can also run on a local Kubernetes cluster using Kind.
 ```bash
 docker build -t local-microservices-api:local ./services/api
 docker build -t local-microservices-worker:local ./services/worker
+
+CI Pipeline
+
+This project includes a GitHub Actions CI pipeline that validates the platform on every push and pull request.
+
+The pipeline checks:
+
+- API service Python syntax
+- Worker service Python syntax
+- API Docker image build
+- Worker Docker image build
+- Kubernetes manifest validation using kubectl dry-run
+
+This demonstrates a CI workflow for a local multi-service platform without using any cloud provider.
