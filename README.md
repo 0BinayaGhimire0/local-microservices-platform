@@ -1,4 +1,6 @@
 # 🚀 Local Microservices Platform
+![CI](https://github.com/0BinayaGhimire0/local-platform-engineering-lab/actions/workflows/ci.yml/badge.svg)
+![Release](https://github.com/0BinayaGhimire0/local-platform-engineering-lab/actions/workflows/release.yml/badge.svg)
 
 A production-style **multi-service platform** that runs entirely on your local machine (no AWS, no cloud, no cost)
 
