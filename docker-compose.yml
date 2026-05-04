@@ -45,3 +45,10 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+  
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    container_name: local-platform-jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"

@@ -1,6 +1,10 @@
 from flask import Flask, jsonify, request, Response
 from prometheus_client import Counter, Gauge, generate_latest, CONTENT_TYPE_LATEST
 from redis import Redis
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 import os
 import json
 import uuid
@@ -28,6 +32,16 @@ QUEUE_LENGTH = Gauge(
     "Current number of pending tasks in Redis queue",
 )
 
+trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+
+otlp_exporter = OTLPSpanExporter(
+    endpoint="http://jaeger:4317",
+    insecure=True,
+)
+
+span_processor = BatchSpanProcessor(otlp_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
 
 @app.route("/")
 def home():
@@ -46,20 +60,21 @@ def health():
 
 @app.route("/tasks", methods=["POST"])
 def create_task():
-    data = request.get_json() or {}
+    with tracer.start_as_current_span("create_task"):
+        data = request.get_json() or {}
 
-    task = {
-        "id": str(uuid.uuid4()),
-        "message": data.get("message", "Default task message"),
-        "status": "queued",
-    }
+        task = {
+            "id": str(uuid.uuid4()),
+            "message": data.get("message", "Default task message"),
+            "status": "queued",
+        }
 
-    redis_client.lpush("task_queue", json.dumps(task))
-    TASKS_CREATED.inc()
+        redis_client.lpush("task_queue", json.dumps(task))
+        TASKS_CREATED.inc()
 
-    logger.info("Task queued", extra={"task_id": task["id"], "message": task["message"]})
+        logger.info("Task queued", extra={"task_id": task["id"], "message": task["message"]})
 
-    return jsonify({"message": "Task queued successfully", "task": task}), 201
+        return jsonify({"message": "Task queued successfully", "task": task}), 201
 
 
 @app.route("/tasks/queue")

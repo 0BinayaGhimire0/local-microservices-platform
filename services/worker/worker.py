@@ -1,5 +1,9 @@
 from prometheus_client import Counter, start_http_server
 from redis import Redis
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 import os
 import json
 import time
@@ -20,12 +24,23 @@ TASKS_PROCESSED = Counter(
     "Total number of tasks processed by the worker service",
 )
 
+trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+
+otlp_exporter = OTLPSpanExporter(
+    endpoint="http://jaeger:4317",
+    insecure=True,
+)
+
+span_processor = BatchSpanProcessor(otlp_exporter)
+trace.get_tracer_provider().add_span_processor(span_processor)
 
 def process_task(task):
-    logger.info("Processing task", extra={"task_id": task["id"], "message": task["message"]})
-    time.sleep(2)
-    TASKS_PROCESSED.inc()
-    logger.info("Completed task", extra={"task_id": task["id"]})
+    with tracer.start_as_current_span("process_task"):
+        logger.info("Processing task", extra={"task_id": task["id"], "message": task["message"]})
+        time.sleep(2)
+        TASKS_PROCESSED.inc()
+        logger.info("Completed task", extra={"task_id": task["id"]})
 
 
 def main():
