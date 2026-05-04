@@ -32,3 +32,14 @@ Redis Queue
   |
   v
 Worker Service
+
+
+Kubernetes Local Deployment
+
+This project can also run on a local Kubernetes cluster using Kind.
+
+### Build Images
+
+```bash
+docker build -t local-microservices-api:local ./services/api
+docker build -t local-microservices-worker:local ./services/worker
