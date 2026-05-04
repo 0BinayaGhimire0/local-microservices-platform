@@ -37,7 +37,10 @@ trace.get_tracer_provider().add_span_processor(span_processor)
 
 def process_task(task):
     with tracer.start_as_current_span("process_task"):
-        logger.info("Processing task", extra={"task_id": task["id"], "message": task["message"]})
+        logger.info(
+            "Processing task",
+            extra={"task_id": task["id"], "payload": task["message"]}
+        )
         time.sleep(2)
         TASKS_PROCESSED.inc()
         logger.info("Completed task", extra={"task_id": task["id"]})

@@ -1,12 +1,21 @@
-# 🚀 Local Microservices Platform
-![CI](https://github.com/0BinayaGhimire0/local-platform-engineering-lab/actions/workflows/ci.yml/badge.svg)
-![Release](https://github.com/0BinayaGhimire0/local-platform-engineering-lab/actions/workflows/release.yml/badge.svg)
+## ⚡ Quick Overview
+![CI](https://github.com/0BinayaGhimire0/local-microservices-platform/actions/workflows/ci.yml/badge.svg)
+![Release](https://github.com/0BinayaGhimire0/local-microservices-platform/actions/workflows/release.yml/badge.svg)
 
-A production-style **multi-service platform** that runs entirely on your local machine (no AWS, no cloud, no cost)
+This is a production-style microservices platform that runs entirely locally and includes:
+- API + Worker architecture
+- Redis-based asynchronous processing
+- Docker & Kubernetes deployment
+- CI/CD pipelines
+- Full observability stack (Prometheus, Grafana, Jaeger)
 
-This project demonstrates how modern distributed systems are built, deployed, and observed using real DevOps tools.
+👉 Run everything locally with a single command:
+```md
+docker compose up --build`
+```
 
----
+`No cloud providers or paid services required.`
+
 
 ## 🧠 What This Project Demonstrates
 
@@ -17,12 +26,9 @@ This project demonstrates how modern distributed systems are built, deployed, an
 * Kubernetes deployment (Kind cluster)
 * CI/CD pipelines using GitHub Actions
 * Observability:
-
   * Metrics (Prometheus)
   * Dashboards (Grafana)
   * Distributed tracing (Jaeger)
-
----
 
 ## 🧰 Tech Stack
 
@@ -33,8 +39,6 @@ This project demonstrates how modern distributed systems are built, deployed, an
 * GitHub Actions (CI/CD)
 * Prometheus & Grafana
 * Jaeger (Tracing)
-
----
 
 ## 🏗️ Architecture Overview
 
@@ -59,7 +63,30 @@ Observability Layer:
 - Jaeger (tracing)
 ```
 
----
+## 📁 Project Structure
+
+```bash
+local-microservices-platform/
+│
+├── services/
+│   ├── api/
+│   ├── worker/
+│
+├── docker-compose.yml
+├── kubernetes/
+│
+├── monitoring/
+│   ├── prometheus/
+│   ├── grafana/
+│
+├── .github/workflows/
+│   ├── ci.yml
+│   ├── release.yml
+│
+├── screenshots/
+│
+└── README.md
+```
 
 ## ⚙️ Prerequisites
 
@@ -70,9 +97,7 @@ Install the following before running:
 * Git
 * (Optional) Kind + kubectl (for Kubernetes mode)
 
----
-
-# 🚀 Quick Start (Recommended)
+# 🚀 Run the Platform Locally
 
 Run the entire platform locally:
 
@@ -80,9 +105,7 @@ Run the entire platform locally:
 docker compose up --build
 ```
 
----
-
-## 🧪 Test the Application
+## 🧪 Interact with the System
 
 ### 1. Check API
 
@@ -90,15 +113,11 @@ docker compose up --build
 curl http://localhost:5000
 ```
 
----
-
 ### 2. Health Check
 
 ```bash
 curl http://localhost:5000/health
 ```
-
----
 
 ### 3. Create a Task
 
@@ -108,23 +127,17 @@ curl -X POST http://localhost:5000/tasks \
   -d "{\"message\":\"Hello from microservices platform\"}"
 ```
 
----
-
 ### 4. Check Queue
 
 ```bash
 curl http://localhost:5000/tasks/queue
 ```
 
----
-
 ### 5. View Worker Logs
 
 ```bash
 docker compose logs worker
 ```
-
----
 
 # 📊 Observability
 
@@ -138,8 +151,6 @@ Example metrics:
 
 * `api_tasks_created_total`
 * `worker_tasks_processed_total`
-
----
 
 ## 🔹 Grafana (Dashboards)
 
@@ -159,8 +170,6 @@ Add Prometheus as a data source:
 http://prometheus:9090
 ```
 
----
-
 ## 🔹 Jaeger (Tracing)
 
 ```text
@@ -173,8 +182,6 @@ Use this to trace requests across services:
 API → Redis → Worker
 ```
 
----
-
 # ☸️ Kubernetes Mode (Optional)
 
 Run the platform in Kubernetes using Kind.
@@ -185,16 +192,12 @@ Run the platform in Kubernetes using Kind.
 kind create cluster --name microservices-platform
 ```
 
----
-
 ### Build images
 
 ```bash
 docker build -t local-microservices-api:local ./services/api
 docker build -t local-microservices-worker:local ./services/worker
 ```
-
----
 
 ### Load images
 
@@ -203,23 +206,17 @@ kind load docker-image local-microservices-api:local --name microservices-platfo
 kind load docker-image local-microservices-worker:local --name microservices-platform
 ```
 
----
-
 ### Deploy
 
 ```bash
 kubectl apply -f kubernetes/
 ```
 
----
-
 ### Access API
 
 ```bash
 kubectl port-forward -n microservices-platform svc/api-service 5000:80
 ```
-
----
 
 # 🔁 CI Pipeline
 
@@ -230,8 +227,6 @@ It validates:
 * Python syntax
 * Docker image builds
 * Kubernetes manifests
-
----
 
 # 📦 Release Pipeline
 
@@ -248,8 +243,6 @@ This will:
 * Tag `latest`
 * Simulate deployment
 
----
-
 # 🧹 Cleanup
 
 Stop everything:
@@ -265,7 +258,38 @@ kubectl delete -f kubernetes/
 kind delete cluster --name microservices-platform
 ```
 
----
+# 📸 Screenshots
+
+### Docker Containers Running
+![Docker](./screenshots/docker.png)
+
+### API Response
+![API](./screenshots/api.png)
+
+### Grafana Dashboard
+![Grafana](./screenshots/grafana.png)
+
+### Jaeger Tracing
+![Jaeger](./screenshots/jaeger.png)
+
+# 📚 How to Use This Project
+
+This project can be explored in stages:
+
+### 1. Run locally with Docker Compose
+Understand how services communicate
+
+### 2. Explore logs and queue
+See how API → Redis → Worker flow works
+
+### 3. Monitor with Prometheus & Grafana
+Understand system metrics and observability
+
+### 4. Trace requests with Jaeger
+Follow distributed requests across services
+
+### 5. Deploy to Kubernetes (optional)
+Run the same system in a cluster environment
 
 # 🎯 Key Takeaways
 
@@ -276,7 +300,7 @@ This project demonstrates:
 * How observability is implemented end-to-end
 * How to simulate production systems without cloud providers
 
----
+
 
 # 👤 Author
 

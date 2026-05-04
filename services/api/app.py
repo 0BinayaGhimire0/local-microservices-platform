@@ -72,7 +72,10 @@ def create_task():
         redis_client.lpush("task_queue", json.dumps(task))
         TASKS_CREATED.inc()
 
-        logger.info("Task queued", extra={"task_id": task["id"], "message": task["message"]})
+        logger.info(
+            "Task queued",
+            extra={"task_id": task["id"], "task_message": task["message"]}
+        )
 
         return jsonify({"message": "Task queued successfully", "task": task}), 201
 
