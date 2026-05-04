@@ -3,9 +3,12 @@ from redis import Redis
 import os
 import json
 import uuid
+import logging
 
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("api-service")
 
 redis_client = Redis(
     host=os.getenv("REDIS_HOST", "redis"),
@@ -38,6 +41,7 @@ def create_task():
     }
 
     redis_client.lpush("task_queue", json.dumps(task))
+    logger.info("Task queued", extra={"task_id": task["id"], "message": task["message"]})
 
     return jsonify({
         "message": "Task queued successfully",

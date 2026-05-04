@@ -2,7 +2,10 @@ from redis import Redis
 import os
 import json
 import time
+import logging
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("worker-service")
 
 redis_client = Redis(
     host=os.getenv("REDIS_HOST", "redis"),
@@ -16,6 +19,9 @@ def process_task(task):
     print(f"Message: {task['message']}")
     time.sleep(2)
     print(f"Completed task: {task['id']}")
+    logger.info("Processing task", extra={"task_id": task["id"], "message": task["message"]})
+    time.sleep(2)
+    logger.info("Completed task", extra={"task_id": task["id"]})
 
 
 def main():
