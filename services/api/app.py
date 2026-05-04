@@ -73,9 +73,9 @@ def create_task():
         TASKS_CREATED.inc()
 
         logger.info(
-            "Task queued",
-            extra={"task_id": task["id"], "task_message": task["message"]}
-        )
+        "Task queued",
+        extra={"task_id": task["id"], "task_message": task["message"]}
+    )
 
         return jsonify({"message": "Task queued successfully", "task": task}), 201
 

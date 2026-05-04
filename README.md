@@ -77,13 +77,10 @@ local-microservices-platform/
 │
 ├── monitoring/
 │   ├── prometheus/
-│   ├── grafana/
 │
 ├── .github/workflows/
 │   ├── ci.yml
 │   ├── release.yml
-│
-├── screenshots/
 │
 └── README.md
 ```
