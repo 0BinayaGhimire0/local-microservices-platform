@@ -57,3 +57,17 @@ The pipeline checks:
 - Kubernetes manifest validation using kubectl dry-run
 
 This demonstrates a CI workflow for a local multi-service platform without using any cloud provider.
+
+Release Pipeline
+
+This project includes a release pipeline triggered by Git tags.
+
+When a tag such as `v1.0.0` is pushed, GitHub Actions:
+
+- Extracts the version from the Git tag
+- Builds versioned Docker images for the API service
+- Builds versioned Docker images for the Worker service
+- Builds latest Docker images
+- Simulates deployment to a local Kubernetes environment
+
+No cloud registry or cloud provider is used.

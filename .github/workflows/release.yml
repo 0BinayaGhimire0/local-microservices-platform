@@ -1,0 +1,43 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release-build:
+    name: Build Versioned Microservice Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from Git tag
+        run: |
+          echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+
+      - name: Build API image with version tag
+        run: |
+          docker build -t local-microservices-api:${VERSION} ./services/api
+
+      - name: Build Worker image with version tag
+        run: |
+          docker build -t local-microservices-worker:${VERSION} ./services/worker
+
+      - name: Build API latest image
+        run: |
+          docker build -t local-microservices-api:latest ./services/api
+
+      - name: Build Worker latest image
+        run: |
+          docker build -t local-microservices-worker:latest ./services/worker
+
+      - name: Simulate release deployment
+        run: |
+          echo "Release version: ${VERSION}"
+          echo "Built API image: local-microservices-api:${VERSION}"
+          echo "Built Worker image: local-microservices-worker:${VERSION}"
+          echo "Deployment target: local Kubernetes environment"
+          echo "No cloud registry or cloud provider used."
