@@ -1,0 +1,26 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: local-platform-redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ./services/api
+    container_name: local-platform-api
+    ports:
+      - "5000:5000"
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      - redis
+
+  worker:
+    build:
+      context: ./services/worker
+    container_name: local-platform-worker
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      - redis
